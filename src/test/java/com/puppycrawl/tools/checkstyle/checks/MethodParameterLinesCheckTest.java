@@ -1,13 +1,8 @@
 package com.puppycrawl.tools.checkstyle.checks;
 
 import com.puppycrawl.tools.checkstyle.AbstractModuleTestSupport;
-import com.puppycrawl.tools.checkstyle.AbstractTreeTestSupport;
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import com.puppycrawl.tools.checkstyle.checks.coding.UnnecessaryParenthesesCheck;
 import org.junit.jupiter.api.Test;
-
-import static com.puppycrawl.tools.checkstyle.checks.coding.UnnecessaryParenthesesCheck.MSG_ASSIGN;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class MethodParameterLinesCheckTest extends AbstractModuleTestSupport {
 
