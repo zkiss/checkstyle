@@ -91,13 +91,4 @@ public class MethodParameterAlignmentCheck extends AbstractCheck {
         }
     }
 
-    private static class ParamListEntry {
-        final int line;
-        final int col;
-
-        private ParamListEntry(int line, int col) {
-            this.line = line;
-            this.col = col;
-        }
-    }
 }
