@@ -66,7 +66,7 @@ public class MethodParameterAlignmentCheck extends AbstractCheck {
     public void visitToken(DetailAST ast) {
         final DetailAST parameters = getFirstChild(ast, TokenTypes.PARAMETERS);
 
-        Set<Integer> cols = walkDfs(parameters.getFirstChild())
+        Set<Integer> uniqueFirstColNumbersInLines = walkDfs(parameters.getFirstChild())
                 .collect(Collectors.toMap(
                         it -> (Integer) it.getLineNo(),
                         it -> {
@@ -86,7 +86,7 @@ public class MethodParameterAlignmentCheck extends AbstractCheck {
                 .map(e -> e.getValue().get(0))
                 .collect(Collectors.toSet());
 
-        if (cols.size() > 1) {
+        if (uniqueFirstColNumbersInLines.size() > 1) {
             log(ast.getLineNo(), ast.getColumnNo(), MSG_PARAM_ALIGNMENT);
         }
     }
