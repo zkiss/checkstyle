@@ -4,8 +4,6 @@ import com.puppycrawl.tools.checkstyle.AbstractModuleTestSupport;
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class MethodParameterAlignmentCheckTest extends AbstractModuleTestSupport {
 
     @Override
