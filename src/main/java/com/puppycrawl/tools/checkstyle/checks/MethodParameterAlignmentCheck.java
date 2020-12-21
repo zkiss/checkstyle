@@ -75,10 +75,10 @@ public class MethodParameterAlignmentCheck extends AbstractCheck {
                             return r;
                         },
                         (l1, l2) -> {
-                            ArrayList<Integer> r = new ArrayList<>(l1);
-                            r.addAll(l2);
-                            Collections.sort(r);
-                            return r;
+                            ArrayList<Integer> allColNumbersInLine = new ArrayList<>(l1);
+                            allColNumbersInLine.addAll(l2);
+                            Collections.sort(allColNumbersInLine);
+                            return allColNumbersInLine;
                         }
                 ))
                 .entrySet()
