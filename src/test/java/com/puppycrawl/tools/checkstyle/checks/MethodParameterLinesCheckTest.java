@@ -18,7 +18,7 @@ public class MethodParameterLinesCheckTest extends AbstractModuleTestSupport {
 
         final String[] expected = {};
 
-        verify(checkConfig, getPath("InputNoMethodIssues.java"), expected);
+        verify(checkConfig, getPath("NoMethodIssues.java"), expected);
     }
 
     @Test
