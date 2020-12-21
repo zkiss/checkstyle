@@ -1,6 +1,7 @@
 package com.puppycrawl.tools.checkstyle.checks;
 
 import com.google.common.collect.Streams;
+import com.puppycrawl.tools.checkstyle.StatelessCheck;
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
@@ -11,6 +12,7 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
+@StatelessCheck
 public class MethodParameterAlignmentCheck extends AbstractCheck {
 
     public static final String MSG_PARAM_ALIGNMENT = "method.params.alignment";
