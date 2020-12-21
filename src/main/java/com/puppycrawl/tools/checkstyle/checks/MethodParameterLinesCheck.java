@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Objects.requireNonNull;
-
 @StatelessCheck
 public class MethodParameterLinesCheck extends AbstractCheck {
 
@@ -21,15 +19,18 @@ public class MethodParameterLinesCheck extends AbstractCheck {
     private boolean allowSingleLine = true;
 
     private static DetailAST getFirstChild(DetailAST ast, int type) {
-        DetailAST c = ast.getFirstChild();
-        while (c != null && c.getType() != type) {
-            c = c.getNextSibling();
-        }
-        return requireNonNull(c);
+        return stream(ast.getFirstChild())
+                .filter(it->it.getType() == type)
+                .findFirst()
+                .get();
+    }
+
+    public static Stream<DetailAST> stream(DetailAST start) {
+        return Streams.stream(iterate(start));
     }
 
     private static Stream<DetailAST> streamAll(DetailAST start, int type) {
-        return Streams.stream(iterate(start))
+        return stream(start)
                 .filter(c -> c.getType() == type);
     }
 

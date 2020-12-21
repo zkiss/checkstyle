@@ -4,13 +4,14 @@ import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 
-import java.util.OptionalInt;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
 public class MethodParameterAlignmentCheck extends AbstractCheck {
 
-    public static final String MSG_PARAM_ALIGNMENT = "method.params.lines";
+    public static final String MSG_PARAM_ALIGNMENT = "method.params.alignment";
 
     private static DetailAST getFirstChild(DetailAST ast, int type) {
         DetailAST c = ast.getFirstChild();
@@ -39,21 +40,10 @@ public class MethodParameterAlignmentCheck extends AbstractCheck {
     public void visitToken(DetailAST ast) {
         final DetailAST parameters = getFirstChild(ast, TokenTypes.PARAMETERS);
 
-        OptionalInt firstParamColumn = OptionalInt.empty();
-        for (DetailAST c = parameters.getFirstChild(); c != null; c = c.getNextSibling()) {
-            if (c.getType() != TokenTypes.PARAMETER_DEF) {
-                continue;
-            }
+        List<DetailAST> paramsAndAnnotations = MethodParameterLinesCheck.stream(parameters.getFirstChild())
+                .filter(it -> it.getType() == TokenTypes.ANNOTATION ||
+                        it.getType() == TokenTypes.PARAMETER_DEF)
+                .collect(Collectors.toList());
 
-            if (!firstParamColumn.isPresent()) {
-                firstParamColumn = OptionalInt.of(c.getColumnNo());
-                continue;
-            }
-
-            if (firstParamColumn.getAsInt() != c.getColumnNo()) {
-                log(c.getLineNo(), c.getColumnNo(), MSG_PARAM_ALIGNMENT);
-                break;
-            }
-        }
     }
 }
