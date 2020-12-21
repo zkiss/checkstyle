@@ -1,6 +1,6 @@
 package com.puppycrawl.tools.checkstyle.checks.methodparameterlines;
 
-public class NoMethodIssues {
+public class InputNoMethodIssues {
 
     public static void f1() {}
 

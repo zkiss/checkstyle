@@ -1,6 +1,5 @@
 package com.puppycrawl.tools.checkstyle.checks;
 
-import com.puppycrawl.tools.checkstyle.StatelessCheck;
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
@@ -9,10 +8,9 @@ import java.util.OptionalInt;
 
 import static java.util.Objects.requireNonNull;
 
-@StatelessCheck
-public class MethodParameterLinesCheck extends AbstractCheck {
+public class MethodParameterAlignmentCheck extends AbstractCheck {
 
-    public static final String MSG_PARAMS_LINES = "method.params.lines";
+    public static final String MSG_PARAM_ALIGNMENT = "method.params.lines";
 
     private static DetailAST getFirstChild(DetailAST ast, int type) {
         DetailAST c = ast.getFirstChild();
@@ -41,32 +39,19 @@ public class MethodParameterLinesCheck extends AbstractCheck {
     public void visitToken(DetailAST ast) {
         final DetailAST parameters = getFirstChild(ast, TokenTypes.PARAMETERS);
 
-        OptionalInt firstParamLine = OptionalInt.empty();
-        OptionalInt secondParamLine = OptionalInt.empty();
-        OptionalInt lastLine = OptionalInt.empty();
+        OptionalInt firstParamColumn = OptionalInt.empty();
         for (DetailAST c = parameters.getFirstChild(); c != null; c = c.getNextSibling()) {
             if (c.getType() != TokenTypes.PARAMETER_DEF) {
                 continue;
             }
 
-            if (!firstParamLine.isPresent()) {
-                firstParamLine = OptionalInt.of(c.getLineNo());
+            if (!firstParamColumn.isPresent()) {
+                firstParamColumn = OptionalInt.of(c.getColumnNo());
                 continue;
             }
 
-            if (!secondParamLine.isPresent()) {
-                secondParamLine = OptionalInt.of(c.getLineNo());
-                lastLine = secondParamLine;
-                continue;
-            }
-
-            if (firstParamLine.getAsInt() == secondParamLine.getAsInt() &&
-                    c.getLineNo() != secondParamLine.getAsInt()) {
-                log(c.getLineNo(), c.getColumnNo(), MSG_PARAMS_LINES);
-                break;
-            } else if (firstParamLine.getAsInt() != secondParamLine.getAsInt() &&
-                    lastLine.getAsInt() == c.getLineNo()) {
-                log(c.getLineNo(), c.getColumnNo(), MSG_PARAMS_LINES);
+            if (firstParamColumn.getAsInt() != c.getColumnNo()) {
+                log(c.getLineNo(), c.getColumnNo(), MSG_PARAM_ALIGNMENT);
                 break;
             }
         }

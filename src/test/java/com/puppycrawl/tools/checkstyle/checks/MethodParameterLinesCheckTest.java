@@ -18,7 +18,7 @@ public class MethodParameterLinesCheckTest extends AbstractModuleTestSupport {
 
         final String[] expected = {};
 
-        verify(checkConfig, getPath("NoMethodIssues.java"), expected);
+        verify(checkConfig, getPath("InputNoMethodIssues.java"), expected);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class MethodParameterLinesCheckTest extends AbstractModuleTestSupport {
                 createModuleConfig(MethodParameterLinesCheck.class);
 
         final String[] expected = {
-                "5:20: " + getCheckMessage(MethodParameterLinesCheck.MESSGE)
+                "5:20: " + getCheckMessage(MethodParameterLinesCheck.MSG_PARAMS_LINES)
         };
 
         verify(checkConfig, getPath("MethodParamsNotAllOneLineOrSeparateLines.java"), expected);
@@ -49,7 +49,7 @@ public class MethodParameterLinesCheckTest extends AbstractModuleTestSupport {
                 createModuleConfig(MethodParameterLinesCheck.class);
 
         final String[] expected = {
-                "5:51: " + getCheckMessage(MethodParameterLinesCheck.MESSGE)
+                "5:51: " + getCheckMessage(MethodParameterLinesCheck.MSG_PARAMS_LINES)
         };
 
         verify(checkConfig, getPath("ConstructorParamsNotAllOneLineOrSeparateLines.java"), expected);
