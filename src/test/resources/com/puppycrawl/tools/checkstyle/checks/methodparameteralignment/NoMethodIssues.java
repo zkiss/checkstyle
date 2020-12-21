@@ -28,4 +28,10 @@ public class NoMethodIssues {
             int p3
     ) {}
 
+    void f6(
+            int p1
+            , int p2,
+            @Ann int p3
+    ) {}
+
 }
