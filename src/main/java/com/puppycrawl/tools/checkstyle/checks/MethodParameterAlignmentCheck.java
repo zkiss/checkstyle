@@ -1,11 +1,13 @@
 package com.puppycrawl.tools.checkstyle.checks;
 
+import com.google.common.collect.Streams;
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -19,6 +21,28 @@ public class MethodParameterAlignmentCheck extends AbstractCheck {
             c = c.getNextSibling();
         }
         return requireNonNull(c);
+    }
+
+    public static Stream<DetailAST> walkDfs(DetailAST start) {
+        return Streams.stream(new Iterator<DetailAST>() {
+            private LinkedList<DetailAST> q = new LinkedList<>();
+            {
+                q.push(start);
+            }
+
+            @Override
+            public boolean hasNext() {
+                return !q.isEmpty();
+            }
+
+            @Override
+            public DetailAST next() {
+                DetailAST r = q.pop();
+                if(r.getNextSibling() != null) q.push(r.getNextSibling());
+                if(r.hasChildren()) q.push(r.getFirstChild());
+                return r;
+            }
+        });
     }
 
     @Override
@@ -40,10 +64,38 @@ public class MethodParameterAlignmentCheck extends AbstractCheck {
     public void visitToken(DetailAST ast) {
         final DetailAST parameters = getFirstChild(ast, TokenTypes.PARAMETERS);
 
-        List<DetailAST> paramsAndAnnotations = MethodParameterLinesCheck.stream(parameters.getFirstChild())
-                .filter(it -> it.getType() == TokenTypes.ANNOTATION ||
-                        it.getType() == TokenTypes.PARAMETER_DEF)
-                .collect(Collectors.toList());
+        Set<Integer> cols = walkDfs(parameters.getFirstChild())
+                .collect(Collectors.toMap(
+                        it -> (Integer) it.getLineNo(),
+                        it -> {
+                            ArrayList<Integer> r = new ArrayList<>();
+                            r.add(it.getColumnNo());
+                            return r;
+                        },
+                        (l1, l2) -> {
+                            ArrayList<Integer> r = new ArrayList<>(l1);
+                            r.addAll(l2);
+                            Collections.sort(r);
+                            return r;
+                        }
+                ))
+                .entrySet()
+                .stream()
+                .map(e -> e.getValue().get(0))
+                .collect(Collectors.toSet());
 
+        if (cols.size() > 1) {
+            log(ast.getLineNo(), ast.getColumnNo(), MSG_PARAM_ALIGNMENT);
+        }
+    }
+
+    private static class ParamListEntry {
+        final int line;
+        final int col;
+
+        private ParamListEntry(int line, int col) {
+            this.line = line;
+            this.col = col;
+        }
     }
 }
