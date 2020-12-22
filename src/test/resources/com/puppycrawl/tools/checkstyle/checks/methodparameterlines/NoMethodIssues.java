@@ -31,4 +31,8 @@ public class NoMethodIssues {
     public String f7(int p1, int p2, boolean p3, long p4, Object p5, short p6, Integer p7, int p8, int p9, int p10, int p11, int p12, int p13, int p14, Object... p15) {
         return "OK";
     }
+
+    public void f8(
+            int p1, int p2, boolean p3, long p4, Object p5, short p6, Integer p7, int p8, int p9, int p10, int p11, int p12, int p13, int p14, Object... p15
+    ) {}
 }
